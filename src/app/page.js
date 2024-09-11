@@ -1,7 +1,7 @@
 "use client"
 
 import ThemeSettings from "./components/ThemeSettings";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Textarea, ActionIcon, Divider, Space, Popover, Stack, Modal, Text, Button } from "@mantine/core";
 import { IconCircleXFilled, IconSend, IconSettings, IconTrash } from "@tabler/icons-react";
 import ollama from 'ollama/browser'
@@ -17,6 +17,7 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [locked, setLocked] = useState(false);
+  const textareaRef = useRef(null);
   const [opened, { open, close }] = useDisclosure(false);
   useEffect(() => {
     async function buildModel() {
@@ -25,6 +26,12 @@ export default function Home() {
 
     buildModel();
   }, []);
+
+  useEffect(() => {
+    if (!locked) {
+      textareaRef.current.focus();
+    }
+  }, [locked]);
 
   async function handleSendMessage(role) {
     try {
@@ -97,6 +104,7 @@ export default function Home() {
           <Space w="xs" />
           <Textarea
             style={{ flex: "1", border: "none" }}
+            ref={textareaRef}
             placeholder="Type your message..."
             value={message}
             disabled={locked}
