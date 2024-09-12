@@ -11,7 +11,7 @@ export default function ThemeSettings() {
     const { setTheme } = useTheme();
 
     return (
-        <Popover width="5vh" trapFocus position="bottom" withArrow shadow="md">
+        <Popover width="5vh" trapFocus position="right" withArrow shadow="md" withinPortal={false} >
             <Popover.Target>
                 <ActionIcon>
                     <IconPaintFilled />

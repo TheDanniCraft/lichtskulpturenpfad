@@ -1,164 +1,142 @@
 "use client"
 
-import ThemeSettings from "./components/ThemeSettings";
-import { useState, useEffect, useRef } from "react";
-import { Textarea, ActionIcon, Divider, Space, Popover, Stack, Modal, Text, Button } from "@mantine/core";
-import { IconCircleXFilled, IconSend, IconSettings, IconTrash } from "@tabler/icons-react";
-import ollama from 'ollama/browser'
+import { Anchor, AppShell, Burger, Button, Center, Grid, Group, Image, Space, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
-const modelfile = `
-FROM llama3.1
-SYSTEM ""
-`
-
+import { links, partners } from '@/app/config'
+import Snowfall from "react-snowfall";
 
 export default function Home() {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [locked, setLocked] = useState(false);
-  const textareaRef = useRef(null);
-  const [opened, { open, close }] = useDisclosure(false);
-  useEffect(() => {
-    async function buildModel() {
-      await ollama.create({ model: 'custom', modelfile: modelfile })
-    }
+    const [opened, { toggle }] = useDisclosure();
 
-    buildModel();
-  }, []);
+    return (
+        <AppShell
+            header={{ height: 60 }}
+            navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
+            padding="md"
+        >
+            <AppShell.Header withBorder={false}>
+                <Group h="100%" px="md">
+                    <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+                    <Group style={{ flex: 1 }}>
+                        <Anchor underline="never" c="var(--mantine-color-white)" fw={750} href="#home">
+                            Lichtskulpturenpfad
+                        </Anchor>
+                        <Group ml="xl" gap={25} visibleFrom="sm">
+                            {
+                                (links).filter(link => !link.hidden).map((link) => (
+                                    <Anchor key={link.label} href={link.href} c="var(--mantine-color-text)" underline="never">
+                                        {link.label}
+                                    </Anchor>
+                                ))
+                            }
+                        </Group>
+                    </Group>
+                </Group>
+            </AppShell.Header>
+            <AppShell.Navbar py="md" px={4}>
+                <Center>
+                    <Stack>
+                        {
+                            links.filter(link => !link.hidden).map((link) => (
+                                <Anchor key={link.label} href={link.href} c="var(--mantine-color-text)" underline="never" onClick={toggle}>
+                                    {link.label}
+                                </Anchor>
+                            ))
+                        }
+                    </Stack>
+                </Center>
+            </AppShell.Navbar>
+            <AppShell.Main id="home">
+                <Center>
+                    <Stack>
+                        <Text size="xl" c="var(--mantine-color-text)" align="center" fw={1000}>
+                            Willkommen im Lichtskulpturenpfad
+                        </Text>
+                        <Grid gutter="xl">
+                            <Grid.Col span={{ base: 12, xs: 12, xs: 6 }} style={{ aspectRatio: '1 / 1' }}>
+                                <Button style={{ width: '100%', height: '100%' }}></Button>
+                            </Grid.Col>
+                            <Grid.Col span={{ base: 12, xs: 12, xs: 6 }} style={{ aspectRatio: '1 / 1' }}>
+                                <Button style={{ width: '100%', height: '100%' }}></Button>
+                            </Grid.Col>
+                            <Grid.Col span={{ base: 12, xs: 12, xs: 6 }} style={{ aspectRatio: '1 / 1' }}>
+                                <Button style={{ width: '100%', height: '100%' }}></Button>
+                            </Grid.Col>
+                            <Grid.Col span={{ base: 12, xs: 12, xs: 6 }} style={{ aspectRatio: '1 / 1' }}>
+                                <Button style={{ width: '100%', height: '100%' }}></Button>
+                            </Grid.Col>
+                        </Grid>
+                        <Text>
+                            Drücke ein Icon um die Figur auf dem Feld zu bewegen.
+                        </Text>
+                    </Stack>
+                </Center>
+                <Space h="20vh" />
 
-  useEffect(() => {
-    if (!locked) {
-      textareaRef.current.focus();
-    }
-  }, [locked]);
+                <Text id="aboutus" size="xl" fw={1000}>Über uns</Text>
+                <Text style={{ maxWidth: "80vw" }}>
+                    Der Lichtskulpturenpfad wurde von dem Oberderdinger Lichtkünstler Prof. Dr. Jürgen Scheible, Hochschule der Medien Stuttgart,
+                    initiiert, konzipiert und in Zusammenarbeit mit Michael Neupert, Harald Stindl - beide aus Oberderdingen - technisch entwickelt
+                    und umgesetzt sowie weiteren Helfern (Alfred Woll, Ludwig Hupbauer, Stefan Scharfe, Christoph Kornblum, Peter Kornblum) aufgebaut.
+                    Web Applikation: Prof. Dr. Jürgen Scheible, Simon Strobel, Jens Bissinger. Das Projekt ist eine Kooperation mit der Gemeinde Oberderdingen
+                    als Veranstalter und tecspaze, einer Digitalwerkstatt für Kinder und Jugendliche für der Region als Technik-Unterstützer.
+                    Des Weiteren unterstützt die Familie Hofmann durch die Bereitstellung von Wiesenflächen diesen interaktive Pfad: <Anchor href="https://tecspaze.de">www.tecspaze.de</Anchor>
+                </Text>
+                <Space h="20vh" />
 
-  async function handleSendMessage(role) {
-    try {
-      if (!message || message.length < 1) return;
-      await setMessages((prevMessages) => [...prevMessages, { content: message, role: role }]);
-      setLocked(true);
+                <Text id="partners" size="xl" fw={1000}>Partner</Text>
+                <Grid gutter="xl">
+                    {
 
-      const response = await ollama.chat({ model: 'custom', messages: [...messages, { content: message, role: role }], stream: true })
-      const newMessage = { content: "", role: "assistant" };
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
+                        partners.map((partner, index) => (
+                            <Grid.Col key={index} span={{ base: 12, sm: 6, md: 4 }}>
+                                <Anchor href={partner.href}>
+                                    <Image src={partner.image} alt="Partner" style={{ maxWidth: "400px" }} />
+                                </Anchor>
+                            </Grid.Col>
+                        ))
+                    }
+                </Grid>
+                <Space h="20vh" />
 
-      for await (const part of response) {
-        newMessage.content += part.message.content;
-        setMessages((prevMessages) => [...prevMessages]); // Update the message in the UI
-      }
-      setLocked(false);
-    }
-    catch (error) {
-      console.error(error);
-      setLocked(false);
-    }
-  };
+                <Text id="impressum" size="xl" fw={1000}>Impressum</Text>
+                <Text size="md" fw={1000}>Angaben gemäß § 5 TMG</Text>
+                <Text>Jürgen Scheible, Hochschule der Medien Stuttgart Nobelstraße 10 70569 Stuttgart</Text>
+                <Space h="md" />
+                <Text size="md" fw={1000}>Kontakt</Text>
+                <Text>Tel.: 0711/8923-2276 E-Mail: scheible@hdm-stuttgart.de</Text>
+                <Space h="md" />
+                <Text size="md" fw={1000}>Haftung für Inhalte</Text>
+                <Text>
+                    Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+                    Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.
+                </Text>
+                <Space h="md" />
+                <Text size="md" fw={1000}>Haftung für Links</Text>
+                <Text>
+                    Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar.
 
-  return (
-    <>
-      <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-        <div style={{ flex: "1 1 auto", overflowY: "auto", padding: "16px", display: "flex", flexDirection: "column-reverse" }}>
-          {messages.slice(0).reverse().map((message, index) => (
-            <div
-              key={index}
-              style={{
-                alignSelf: message.role === "user" ? "flex-start" : "flex-end",
-                padding: "8px",
-                margin: "4px",
-                borderRadius: "4px",
-                backgroundColor: message.role === "user" ? "#e0e0e0" : "#2196f3",
-                color: message.role === "user" ? "#000" : "#fff",
-                "max-width": "80%",
-                whiteSpace: "pre-wrap",
-              }}
-            >
-              <Text>{message.content}</Text>
-            </div>
-          ))}
-        </div>
-        <Divider />
-        <div style={{ display: "flex", alignItems: "flex-end", padding: "16px" }}>
-          <Popover trapFocus position="bottom" withArrow shadow="md">
-            <Popover.Target>
-              <ActionIcon
-                style={{ height: "35px", width: "35px", alignSelf: "flex-start" }}
-              >
-                <IconSettings />
-              </ActionIcon>
-            </Popover.Target>
-            <Popover.Dropdown>
-              <Stack>
-                <ThemeSettings />
-                <ActionIcon
-                  color="#c21325"
-                  onClick={() => {
-                    open();
-                  }}
-                >
-                  <IconTrash />
-                </ActionIcon>
-              </Stack>
-            </Popover.Dropdown>
-          </Popover>
-          <Space w="xs" />
-          <Textarea
-            style={{ flex: "1", border: "none" }}
-            ref={textareaRef}
-            placeholder="Type your message..."
-            value={message}
-            disabled={locked}
-            autosize
-            maxRows={4}
-            onChange={(event) => setMessage(event.currentTarget.value)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" && !event.shiftKey) {
-                event.preventDefault();
-                handleSendMessage("user");
-                setMessage("");
-              }
-            }}
-          />
-          <Space w="xs" />
-          <ActionIcon
-            style={{ height: "35px", width: "35px", alignSelf: "flex-end" }}
-            disabled={locked}
-            onClick={() => {
-              handleSendMessage("user");
-              setMessage("");
-            }}
-          >
-            <IconSend />
-          </ActionIcon>
-        </div>
-      </div>
+                    Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.
+                </Text>
+                <Space h="md" />
+                <Text size="md" fw={1000}>Urheberrecht</Text>
+                <Text>
+                    Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.
 
-      <Modal opened={opened} onClose={close} title="Confirm">
-        <Text fw={1000}>Are you sure you want to delete your full chat? It will be gone forever (a long time)!</Text>
-        <Space h="md" />
-        <div style={{ display: "flex", flexGrow: 1 }}>
-          <Button
-            color="grey"
-            style={{ flex: 1 }}
-            onClick={close}
-            rightSection={<IconCircleXFilled />}
-          >
-            No
-          </Button>
-          <Space w="xs" />
-          <Button
-            color="#c21325"
-            style={{ flex: 1 }}
-            onClick={() => {
-              setMessages([]);
-              close();
-            }}
-            rightSection={<IconTrash />}
-          >
-            Yes
-          </Button>
-        </div>
-      </Modal>
-    </>
-  );
+                    Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.
+                </Text>
+                <Text>Quelle:e-recht24.de</Text>
+                <Space h="md" />
+                <Text>© 2021 - 2024 Lichtskulpturenpfad</Text>
+            </AppShell.Main>
+
+            <Snowfall
+                snowflakeCount={150}
+                wind={[0, 0]}
+                speed={[0.4, 0.6]}
+                style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: -1 }}
+            />
+        </AppShell>
+    )
 }

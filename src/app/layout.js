@@ -16,7 +16,9 @@ export default function RootLayout({ children }) {
         <ColorSchemeScript />
       </head>
       <body>
-        <Theme>{children}</Theme>
+        <Theme>
+          {children}
+        </Theme>
       </body>
     </html>
   );
