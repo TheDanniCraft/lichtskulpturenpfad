@@ -24,4 +24,19 @@ const partners = [
 	}
 ]
 
-export { links, partners }
+const figures = {
+	herz: {
+		prompt: "Du bist ein Herz",
+	},
+	krippe: {
+		prompt: "Du bist eine Krippe",
+	},
+	engel: {
+		prompt: "Du bist ein Engel",
+	},
+	schaf: {
+		prompt: "Du bist ein Schaf",
+	},
+}
+
+export { links, partners, figures }
