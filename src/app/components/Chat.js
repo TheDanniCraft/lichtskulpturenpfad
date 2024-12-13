@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Textarea, ActionIcon, Divider, Space, Text } from "@mantine/core";
-import { IconSend, IconTrash } from "@tabler/icons-react";
-import ollama from 'ollama/browser';
-import { useDisclosure } from "@mantine/hooks";
+import { IconArrowLeft, IconSend } from "@tabler/icons-react";
+import { Ollama } from 'ollama/browser';
 
-export default function Chat({ height = 'auto', systemPrompt = "" }) {
+const ollama = new Ollama({ host: "https://teki.thedannicraft.de" })
+
+export default function Chat({ close, height = 'auto', systemPrompt = "" }) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
     const [locked, setLocked] = useState(false);
@@ -15,7 +16,7 @@ export default function Chat({ height = 'auto', systemPrompt = "" }) {
     useEffect(() => {
         async function buildModel() {
             const baseConfig = `
-                FROM llama3.1
+                FROM llama3.2
                 SYSTEM "${systemPrompt}"
             `;
             await ollama.create({ model: 'custom', modelfile: baseConfig });
@@ -84,9 +85,9 @@ export default function Chat({ height = 'auto', systemPrompt = "" }) {
                 <ActionIcon
                     style={{ height: "35px", width: "35px", alignSelf: "flex-start" }}
                     color="var(--mantine-color-red-9)"
-                    onClick={() => setMessages([])}
+                    onClick={() => close()}
                 >
-                    <IconTrash />
+                    <IconArrowLeft />
                 </ActionIcon>
                 <Space w="xs" />
                 <Textarea

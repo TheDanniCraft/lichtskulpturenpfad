@@ -63,6 +63,7 @@ export default function Home() {
                         <Text size="xl" c="var(--mantine-color-text)" align="center" fw={1000}>
                             Willkommen im Lichtskulpturenpfad
                         </Text>
+                        <Space h="xl" />
                         <Center
                             w='calc(100dvw - var(--app-shell-padding) * 2)'
                         >
@@ -72,15 +73,19 @@ export default function Home() {
                                     variant="transparent"
                                     onClick={() => runFigure("herz")}
                                 >
-                                    <Image src="/images/rost.png" alt="Rost" />
+                                    <Image src="/images/herz.png" alt="Herz" />
                                 </Button>
-                                <Button
-                                    style={{ width: '100%', height: '100%', maxWidth: '200px', maxHeight: '200px' }}
-                                    variant="transparent"
-                                    onClick={() => runFigure("krippe")}
-                                >
-                                    <Image src="/images/schneeballe.png" alt="Schneebälle" />
-                                </Button>
+                                {
+                                    /*
+                                    <Button
+                                        style={{ width: '100%', height: '100%', maxWidth: '200px', maxHeight: '200px' }}
+                                        variant="transparent"
+                                        onClick={() => runFigure("krippe")}
+                                    >
+                                        <Image src="/images/schneeballe.png" alt="Schneebälle" />
+                                    </Button>
+                                    */
+                                }
                                 <Button
                                     style={{ width: '100%', height: '100%', maxWidth: '200px', maxHeight: '200px' }}
                                     variant="transparent"
@@ -88,13 +93,17 @@ export default function Home() {
                                 >
                                     <Image src="/images/engel.png" alt="Engel" />
                                 </Button>
-                                <Button
-                                    style={{ width: '100%', height: '100%', maxWidth: '200px', maxHeight: '200px' }}
-                                    variant="transparent"
-                                    onClick={() => runFigure("schaf")}
-                                >
-                                    <Image src="/images/kerze.png" alt="Kerze" />
-                                </Button>
+                                {
+                                    /*
+                                    <Button
+                                        style={{ width: '100%', height: '100%', maxWidth: '200px', maxHeight: '200px' }}
+                                        variant="transparent"
+                                        onClick={() => runFigure("schaaf")}
+                                    >
+                                        <Image src="/images/kerze.png" alt="Kerze" />
+                                    </Button>
+                                    */
+                                }
                             </SimpleGrid>
                         </Center>
                         <Text align="center">
@@ -168,7 +177,7 @@ export default function Home() {
             />
 
             <Modal opened={modalOpened} onClose={close} title="" centered>
-                <Chat height="80vh" systemPrompt={systemPrompt} />
+                <Chat height="80vh" systemPrompt={systemPrompt} close={close} />
             </Modal>
         </AppShell>
     );

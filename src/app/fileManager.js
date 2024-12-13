@@ -4,7 +4,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 
 export async function save(id) {
-    const projectRoot = path.resolve(__dirname, '../../..');
+    const projectRoot = path.resolve(process.cwd());
     const dataDir = path.join(projectRoot, 'public', 'data');
 
     await fs.mkdir(dataDir, { recursive: true });
@@ -25,8 +25,10 @@ export async function save(id) {
 
     const currentTime = Date.now();
     if (currentTime - lastActionTime < 10000) {
-        console.log('Action skipped: Less than 10 seconds since the last action.');
-        return;
+        if (id != "Aus" && id != "Ein") {
+            console.log('Action skipped: Less than 10 seconds since the last action.');
+            return;
+        }
     }
 
     await fs.writeFile(filePath, id, 'utf8');
