@@ -1,15 +1,17 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react";
-import { Textarea, ActionIcon, Divider, Space, Text } from "@mantine/core";
-import { IconArrowLeft, IconSend } from "@tabler/icons-react";
+import { Textarea, ActionIcon, Divider, Space, Text, Group, Center } from "@mantine/core";
+import { IconAlertTriangle, IconAlertTriangleFilled, IconArrowLeft, IconSend } from "@tabler/icons-react";
 import { Ollama } from 'ollama/browser';
 
 const ollama = new Ollama({ host: "https://teki.thedannicraft.de" })
 
 export default function Chat({ close, height = 'auto', systemPrompt = "" }) {
     const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState([
+        { content: "Schau zu mir aufs Feld!", role: "assistant" }
+    ]);
     const [locked, setLocked] = useState(false);
     const textareaRef = useRef(null);
 
@@ -22,6 +24,10 @@ export default function Chat({ close, height = 'auto', systemPrompt = "" }) {
             await ollama.create({ model: 'custom', modelfile: baseConfig });
         }
         buildModel();
+
+        setTimeout(() => {
+            setMessages((prevMessages) => [...prevMessages, { content: 'Hallo, ich bin die Lichtfigur. Schreibe mir gerne etwas! \n\n Dieser Chatverlauf geht beim verlassen des Chats verloren, es werden keine Daten gespeichert.', role: "assistant" }]);
+        }, 3000);
     }, [systemPrompt]);
 
     useEffect(() => {
@@ -81,6 +87,14 @@ export default function Chat({ close, height = 'auto', systemPrompt = "" }) {
                 ))}
             </div>
             <Divider />
+            <Space h="xs" />
+            <Center>
+                <Group gap="5">
+                    <IconAlertTriangleFilled color="var(--mantine-color-dimmed)" size="15" />
+                    <Text span c="dimmed" size="xs">KI kann Fehler machen, überprüfe daher die Antworten.</Text>
+                    <Text span c="dimmed" size="xs"> Nutzung auf eigene Verantwortung.</Text>
+                </Group>
+            </Center>
             <div style={{ display: "flex", alignItems: "flex-end", padding: "16px" }}>
                 <ActionIcon
                     style={{ height: "35px", width: "35px", alignSelf: "flex-start" }}

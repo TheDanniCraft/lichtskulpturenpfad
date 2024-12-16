@@ -11,10 +11,12 @@ import { save } from "./fileManager";
 export default function Home() {
     const [opened, { toggle }] = useDisclosure();
     const [modalOpened, { open, close }] = useDisclosure(false);
+    const [model, setModel] = useState("");
     const [systemPrompt, setSystemPrompt] = useState("");
 
     function runFigure(id) {
         save(id);
+        setModel(id.charAt(0).toUpperCase() + id.slice(1));
         setSystemPrompt(figures[id].prompt);
         open();
     };
@@ -63,7 +65,7 @@ export default function Home() {
                         <Text size="xl" c="var(--mantine-color-text)" align="center" fw={1000}>
                             Willkommen im Lichtskulpturenpfad
                         </Text>
-                        <Space h="xl" />
+                        <Space h="100" />
                         <Center
                             w='calc(100dvw - var(--app-shell-padding) * 2)'
                         >
@@ -115,22 +117,21 @@ export default function Home() {
 
                 <Text id="aboutus" size="xl" fw={1000}>Über uns</Text>
                 <Text style={{ maxWidth: "80vw" }}>
-                    Der Lichtskulpturenpfad wurde von dem Oberderdinger Lichtkünstler Prof. Dr. Jürgen Scheible, Hochschule der Medien Stuttgart,
-                    initiiert, konzipiert und in Zusammenarbeit mit Michael Neupert, Harald Stindl - beide aus Oberderdingen - technisch entwickelt
-                    und umgesetzt sowie weiteren Helfern (Alfred Woll, Ludwig Hupbauer, Stefan Scharfe, Christoph Kornblum, Peter Kornblum) aufgebaut.
-                    Web Applikation: Prof. Dr. Jürgen Scheible, Simon Strobel, Jens Bissinger. Das Projekt ist eine Kooperation mit der Gemeinde Oberderdingen
-                    als Veranstalter und tecspaze, einer Digitalwerkstatt für Kinder und Jugendliche für der Region als Technik-Unterstützer.
-                    Des Weiteren unterstützt die Familie Hofmann durch die Bereitstellung von Wiesenflächen diesen interaktive Pfad. <Anchor href="https://tecspaze.de">www.tecspaze.de</Anchor>
+                    Der Lichtskulpturenpfad wurde von dem Oberderdinger Lichtkünstler Prof. Dr. Jürgen Scheible, Hochschule der Medien Stuttgart, initiiert,
+                    konzipiert und in Zusammenarbeit mit Michael Neupert, Harald Stindl und <Anchor href="https://thedannicraft.de">Daniel Trui (KI)</Anchor> technisch entwickelt und umgesetzt sowie weiteren Helfern
+                    (Alfred Woll, David Krauß, Adrian Demianiw, Ludwig Hupbauer) aufgebaut. Das Projekt ist eine Kooperation mit der Gemeinde Oberderdingen als Veranstalter und <Anchor href="https://tecspaze.de">tecspaze</Anchor>,
+                    einer Digitalwerkstatt für Kinder und Jugendliche für der Region als Technik-Unterstützer. Des Weiteren unterstützt die Familie Simon durch die Bereitstellung von Wiesenflächen.
                 </Text>
                 <Space h="20vh" />
 
                 <Text id="partners" size="xl" fw={1000}>Partner</Text>
+                <Space h="md" />
                 <Grid gutter="xl">
                     {
                         partners.map((partner, index) => (
                             <Grid.Col key={index} span={{ base: 12, sm: 6, md: 4 }}>
                                 <Anchor href={partner.href}>
-                                    <Image src={partner.image} alt="Partner" style={{ maxWidth: "400px" }} />
+                                    <Image src={partner.image} alt="Partner" style={{ maxWidth: "400px", padding: "0px 20px" }} />
                                 </Anchor>
                             </Grid.Col>
                         ))
@@ -176,8 +177,8 @@ export default function Home() {
                 style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: -1 }}
             />
 
-            <Modal opened={modalOpened} onClose={close} title="" centered>
-                <Chat height="80vh" systemPrompt={systemPrompt} close={close} />
+            <Modal opened={modalOpened} onClose={close} title={model} centered>
+                <Chat height="75vh" systemPrompt={systemPrompt} close={close} model={model} />
             </Modal>
         </AppShell>
     );

@@ -21,6 +21,10 @@ const partners = [
 	{
 		image: "/images/tecspaze.png",
 		href: "https://tecspaze.de"
+	},
+	{
+		image: "/images/destillerieSimon.png",
+		href: "https://www.destillerie-simon.de/"
 	}
 ]
 
