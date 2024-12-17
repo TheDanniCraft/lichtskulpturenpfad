@@ -10,7 +10,7 @@ const ollama = new Ollama({ host: "https://teki.thedannicraft.de" })
 export default function Chat({ close, height = 'auto', systemPrompt = "" }) {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([
-        { content: "Schau zu mir aufs Feld!", role: "assistant" }
+        { content: "Schau aufs Feld!", role: "assistant" }
     ]);
     const [locked, setLocked] = useState(false);
     const textareaRef = useRef(null);
@@ -92,7 +92,7 @@ export default function Chat({ close, height = 'auto', systemPrompt = "" }) {
                 <Group gap="5">
                     <IconAlertTriangleFilled color="var(--mantine-color-dimmed)" size="15" />
                     <Text span c="dimmed" size="xs">KI kann Fehler machen, überprüfe daher die Antworten.</Text>
-                    <Text span c="dimmed" size="xs"> Nutzung auf eigene Verantwortung.</Text>
+                    <Text span c="dimmed" size="xs"> Nutzung erfolgt auf eigene Verantwortung.</Text>
                 </Group>
             </Center>
             <div style={{ display: "flex", alignItems: "flex-end", padding: "16px" }}>
